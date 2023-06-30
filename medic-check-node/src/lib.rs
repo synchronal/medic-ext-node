@@ -78,3 +78,52 @@ pub fn packages_installed(cd: Option<String>, prefix: Option<String>) -> CheckRe
         ),
     }
 }
+
+pub fn corepack_shim_installed(name: String, version: String) -> CheckResult {
+    enable_corepack()?;
+
+    let shim = format!("{name}@{version}");
+
+    let mut corepack_remedy = Command::new("corepack");
+    corepack_remedy.args(["prepare", &shim, "--activate"]);
+    let mut npm_remedy = Command::new("npm");
+    npm_remedy.args(["install", "-g", &shim]);
+
+    let remedy = format!("{corepack_remedy:?} && {npm_remedy:?}");
+
+    match Command::new("npm").args(["ls", "-g", &name]).output() {
+        Ok(output) => {
+            let stdout = std_to_string(output.stdout);
+            let stderr = std_to_string(output.stderr);
+
+            if output.status.success() && stdout.contains(&shim) {
+                CheckOk
+            } else {
+                CheckError(
+                    "Node corepack shim out of date.".into(),
+                    Some(stdout),
+                    Some(stderr),
+                    Some(remedy),
+                )
+            }
+        }
+        Err(_err) => CheckError(
+            "Node corepack shim not installed.".into(),
+            None,
+            None,
+            Some(remedy),
+        ),
+    }
+}
+
+fn enable_corepack() -> CheckResult {
+    match Command::new("corepack").arg("enable").output() {
+        Ok(_) => CheckOk,
+        Err(error) => CheckError(
+            "Unable to enable corepack".into(),
+            None,
+            Some(format!("{error}")),
+            None,
+        ),
+    }
+}

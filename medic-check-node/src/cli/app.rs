@@ -14,6 +14,8 @@ pub struct CliArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
+    /// Checks whether a corepack shim (such as pnpm) has been installed.
+    CorepackShimInstalled(CorepackShimArgs),
     /// Checks that NPM exists in the PATH.
     NpmExists,
     /// Checks that all NPM dependencies are installed.
@@ -31,6 +33,19 @@ pub struct PackageArgs {
     #[clap(value_parser)]
     #[arg(short, long, value_hint = clap::ValueHint::DirPath)]
     pub prefix: Option<String>,
+}
+
+#[derive(Args, Debug)]
+pub struct CorepackShimArgs {
+    /// Name of a shim
+    #[clap(value_parser)]
+    #[arg(short, long, value_hint = clap::ValueHint::CommandString)]
+    pub name: String,
+
+    /// Version of the shim
+    #[clap(value_parser)]
+    #[arg(short, long, value_hint = clap::ValueHint::CommandString)]
+    pub version: String,
 }
 
 impl Default for CliArgs {
