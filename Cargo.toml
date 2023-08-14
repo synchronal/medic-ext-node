@@ -3,6 +3,7 @@
 members = [
     "medic-check-node",
 ]
+resolver = "1"
 
 [workspace.dependencies]
 clap = { version = "4.1.8" }
