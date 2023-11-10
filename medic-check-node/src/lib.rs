@@ -81,29 +81,25 @@ pub fn packages_installed(cd: Option<String>, prefix: Option<String>) -> CheckRe
 
 pub fn corepack_shim_installed(name: String, version: String) -> CheckResult {
     enable_corepack()?;
+    corepack_shim_in_path(&name, &version)?;
+    corepack_shim_version_matches(&name, &version)
+}
 
+fn corepack_shim_in_path(name: &String, version: &String) -> CheckResult {
     let shim = format!("{name}@{version}");
+    let mut remedy = Command::new("corepack");
+    remedy.args(["install", "--global", &shim]);
 
-    let mut corepack_remedy = Command::new("corepack");
-    corepack_remedy.args(["prepare", &shim, "--activate"]);
-    let mut npm_remedy = Command::new("npm");
-    npm_remedy.args(["install", "-g", &shim]);
-
-    let remedy = format!("{corepack_remedy:?} && {npm_remedy:?}");
-
-    match Command::new("npm").args(["ls", "-g", &name]).output() {
+    match Command::new("which").args([name]).output() {
         Ok(output) => {
-            let stdout = std_to_string(output.stdout);
-            let stderr = std_to_string(output.stderr);
-
-            if output.status.success() && stdout.contains(&shim) {
+            if output.status.success() {
                 CheckOk
             } else {
                 CheckError(
-                    "Node corepack shim out of date.".into(),
-                    Some(stdout),
-                    Some(stderr),
-                    Some(remedy),
+                    "Node corepack shim not installed.".into(),
+                    None,
+                    None,
+                    Some(format!("({remedy:?})")),
                 )
             }
         }
@@ -111,8 +107,29 @@ pub fn corepack_shim_installed(name: String, version: String) -> CheckResult {
             "Node corepack shim not installed.".into(),
             None,
             None,
-            Some(remedy),
+            Some(format!("({remedy:?})")),
         ),
+    }
+}
+
+fn corepack_shim_version_matches(name: &String, version: &String) -> CheckResult {
+    let shim = format!("{name}@{version}");
+    let mut remedy = Command::new("corepack");
+    remedy.args(["install", "--global", &shim]);
+
+    let output = Command::new(name).args(["--version"]).output().unwrap();
+    let stdout = std_to_string(output.stdout);
+    let stderr = std_to_string(output.stderr);
+
+    if output.status.success() && str::trim(&stdout).eq(version) {
+        CheckOk
+    } else {
+        CheckError(
+            "Node corepack shim out of date.".into(),
+            Some(stdout),
+            Some(stderr),
+            Some(format!("({remedy:?})")),
+        )
     }
 }
 

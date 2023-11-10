@@ -2,6 +2,8 @@
 
 ## Unreleased changes
 
+- `medic-check-node corepack-shim-installed` handles the fact that in newer versions of corepack
+  the installed package manager does not appear in `npm ls -g`.
 
 ## v0.2.0
 
