@@ -1,5 +1,4 @@
 [doctor]
-
 checks = [
   { check = "tool-versions", command = "plugin-installed", args = { plugin = "rust" } },
   { check = "tool-versions", command = "package-installed", args = { plugin = "rust" } },
@@ -13,29 +12,30 @@ checks = [
 ]
 
 [test]
-
 checks = [
   { name = "Check for warnings", shell = "cargo build --workspace --features strict" },
   { name = "Runt tests", shell = "cargo test", verbose = true },
 ]
 
 [audit]
-
 checks = [
-  { name = "Audit crates", shell = "cargo audit", allow_failure = true, verbose = true },
+  { name = "Audit crates", shell = "cargo audit", verbose = true },
   { check = "rust", command = "format-check" },
   { step = "rust", command = "clippy" },
 ]
 
-[update]
+[outdated]
+checks = [
+  { check = "rust", cd = "medic-check-node" },
+]
 
+[update]
 steps = [
   { step = "git", command = "pull" },
   { doctor = {} },
 ]
 
 [shipit]
-
 steps = [
   { audit = {} },
   { update = {} },
