@@ -2,6 +2,8 @@
 
 ## Unreleased changes
 
+## v0.4.0
+
 - `medic-outdated-node`
 
 ## v0.3.0
