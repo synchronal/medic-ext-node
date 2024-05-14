@@ -2,6 +2,8 @@
 
 ## Unreleased changes
 
+- `medic-outdated-node`
+
 ## v0.3.0
 
 - `medic-check-node corepack-shim-installed` handles the fact that in newer versions of corepack

@@ -2,14 +2,18 @@
 
 members = [
     "medic-check-node",
+    "medic-outdated-node",
 ]
 resolver = "1"
 
 [workspace.dependencies]
-clap = { version = "4.1.8", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
-clap_complete = "4.1.4"
+clap = { version = "4.1", features = ["derive", "cargo", "wrap_help", "env", "unicode" ] }
+clap_complete = "4.1"
 indoc = "2.0.1"
-medic-lib = "0.1"
+medic-lib = "0.2"
+serde = "1.0"
+serde_json = "1.0"
+which = "6.0"
 
 [workspace.package]
 authors = ["Eric Saxby <sax@livinginthepast.org>", "synchonal.dev"]

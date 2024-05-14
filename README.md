@@ -23,13 +23,17 @@ brew  'synchronal/tap/medic-ext-node'
 
 ```toml
 [doctor]
-
 checks = [
   { check = "homebrew" },
   { check = "asdf", command = "plugin-installed", args = { plugin = "nodejs" } },
   { check = "asdf", command = "package-installed", args = { plugin = "nodejs" } },
   { check = "node", command = "corepack-shim-installed", args = { name = "pnpm", version = "8.6.5" } },
   { check = "node", command = "packages-installed", args = { prefix = "assets" } },
+]
+
+[outdated]
+checks = [
+  { check = "node", cd = "subdirectory" }
 ]
 ```
 
@@ -67,4 +71,9 @@ medic-check-node packaged-installed
 medic-check-node packaged-installed --cd <dir>
 medic-check-node packaged-installed --prefix <dir>
 ```
+
+
+## medic-outdated-node
+
+Check for outdated packages.
 
