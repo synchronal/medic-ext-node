@@ -13,13 +13,13 @@ checks = [
 
 [test]
 checks = [
-  { name = "Check for warnings", shell = "cargo build --workspace --features strict" },
-  { name = "Runt tests", shell = "cargo test", verbose = true },
+  { name = "Check for warnings", shell = "cargo build --workspace --features strict --color always", verbose = true },
+  { name = "Runt tests", shell = "cargo test --color always", verbose = true },
 ]
 
 [audit]
 checks = [
-  { name = "Audit crates", shell = "cargo audit", verbose = true },
+  { name = "Audit crates", shell = "cargo audit --color always", verbose = true },
   { check = "rust", command = "format-check" },
   { step = "rust", command = "clippy" },
 ]
