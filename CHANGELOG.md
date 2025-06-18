@@ -2,6 +2,12 @@
 
 ## Unreleased changes
 
+## v1.0.0
+
+- No breaking changes have been introduced, but this project is being
+  updated to v1.0.0 to make clear that it is stable.
+- Update deps.
+
 ## v0.4.0
 
 - `medic-outdated-node`
